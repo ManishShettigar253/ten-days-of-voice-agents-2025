@@ -54,275 +54,193 @@ load_dotenv(".env.local")
 # -------------------------
 # Simple Game World Definition
 # -------------------------
-# A compact world with a few scenes and choices forming a mini-arc.
+# A compact world with a few scenes and choices - stranger things adventure game 
+
 WORLD = {
     "intro": {
-        "title": "A Shadow over Brinmere",
+        "title": "Shadows in Hawkins",
         "desc": (
-            "You awake on the damp shore of Brinmere, the moon a thin silver crescent. "
-            "A ruined watchtower smolders a short distance inland, and a narrow path leads "
-            "towards a cluster of cottages to the east. In the water beside you lies a "
-            "small, carved wooden box, half-buried in sand."
+            "It's November 6, 1983. You're biking through Mirkwood woods near Hawkins, flashlight flickering. "
+            "A scream echoes—Will Byers is missing. Ahead: a flickering red gate in the trees, Hawkins Lab fence to the east, "
+            "and a trail of black slime leading to a drainage pipe."
         ),
         "choices": {
-            "inspect_box": {
-                "desc": "Inspect the carved wooden box at the water's edge.",
-                "result_scene": "box",
-            },
-            "approach_tower": {
-                "desc": "Head inland towards the smoldering watchtower.",
-                "result_scene": "tower",
-            },
-            "walk_to_cottages": {
-                "desc": "Follow the path east towards the cottages.",
-                "result_scene": "cottages",
-            },
+            "check_gate": {"desc": "Investigate the flickering red gate.", "result_scene": "upside_down_peek"},
+            "lab_fence": {"desc": "Sneak toward Hawkins Lab fence.", "result_scene": "lab_fence"},
+            "follow_slime": {"desc": "Follow the black slime trail to the pipe.", "result_scene": "pipe"},
         },
     },
-    "box": {
-        "title": "The Box",
+    "upside_down_peek": {
+        "title": "Upside Down Gate",
         "desc": (
-            "The box is warm despite the night air. Inside is a folded scrap of parchment "
-            "with a hatch-marked map and the words: 'Beneath the tower, the latch sings.' "
-            "As you read, a faint whisper seems to come from the tower, as if the wind "
-            "itself speaks your name."
+            "Pungent spores fill the air through the pulsing red gate. Vines writhe inside a decayed mirror of the woods. "
+            "A distant growl—like wet petals opening—approaches."
         ),
         "choices": {
-            "take_map": {
-                "desc": "Take the map and keep it.",
-                "result_scene": "tower_approach",
-                "effects": {"add_journal": "Found map fragment: 'Beneath the tower, the latch sings.'"},
-            },
-            "leave_box": {
-                "desc": "Leave the box where it is.",
-                "result_scene": "intro",
-            },
+            "enter_gate": {"desc": "Step through the gate (risky!).", "result_scene": "upside_down"},
+            "throw_stick": {"desc": "Toss a stick through to test.", "result_scene": "demogorgon_spot", "effects": {"add_journal": "Something inside reacted—fast."}},
+            "run_to_lab": {"desc": "Flee toward the lab fence.", "result_scene": "lab_fence"},
         },
     },
-    "tower": {
-        "title": "The Watchtower",
+    "lab_fence": {
+        "title": "Hawkins Lab Perimeter",
         "desc": (
-            "The watchtower's stonework is cracked and warm embers glow within. An iron "
-            "latch covers a hatch at the base — it looks old but recently used. You can "
-            "try the latch, look for other entrances, or retreat."
+            "Barbed wire and 'Restricted' signs surround the lab. Lights flicker unnaturally; guards patrol. "
+            "You spot a torn Eggo wrapper and hear static on your walkie-talkie."
         ),
         "choices": {
-            "try_latch_without_map": {
-                "desc": "Try the iron latch without any clue.",
-                "result_scene": "latch_fail",
-            },
-            "search_around": {
-                "desc": "Search the nearby rubble for another entrance.",
-                "result_scene": "secret_entrance",
-            },
-            "retreat": {
-                "desc": "Step back to the shoreline.",
-                "result_scene": "intro",
-            },
+            "cut_fence": {"desc": "Try cutting through the fence.", "result_scene": "lab_breach"},
+            "use_walkie": {"desc": "Radio for Dustin or Lucas.", "result_scene": "radio_contact", "effects": {"add_journal": "Walkie static: 'Friends don't lie... help!'"}},
+            "back_to_woods": {"desc": "Return to Mirkwood.", "result_scene": "intro"},
+            "head_creel": {"desc": "Bike to Creel House (cursed rumors).", "result_scene": "creel_house"},
         },
     },
-    "tower_approach": {
-        "title": "Toward the Tower",
+    "pipe": {
+        "title": "Drainage Pipe",
         "desc": (
-            "Clutching the map, you approach the watchtower. The map's marks align with "
-            "the hatch at the base, and you notice a faint singing resonance when you step close."
+            "Black slime coats the pipe walls. Flickering lights reveal Demodog tracks. "
+            "A child's bike lies abandoned—Will's?"
         ),
         "choices": {
-            "open_hatch": {
-                "desc": "Use the map clue and try the hatch latch carefully.",
-                "result_scene": "latch_open",
-                "effects": {"add_journal": "Used map clue to open the hatch."},
-            },
-            "search_around": {
-                "desc": "Search for another entrance.",
-                "result_scene": "secret_entrance",
-            },
-            "retreat": {
-                "desc": "Return to the shore.",
-                "result_scene": "intro",
-            },
+            "enter_pipe": {"desc": "Crawl through the slimy pipe.", "result_scene": "demodog_nest"},
+            "check_bike": {"desc": "Examine Will's abandoned bike.", "result_scene": "bike_clue", "effects": {"add_inventory": "will_drawing"}},
+            "back_woods": {"desc": "Return to woods.", "result_scene": "intro"},
         },
     },
-    "latch_fail": {
-        "title": "A Bad Twist",
+    "demogorgon_spot": {
+        "title": "Demogorgon Hunt",
         "desc": (
-            "You twist the latch without heed — the mechanism sticks, and the effort sends "
-            "a shiver through the ground. From inside the tower, something rustles in alarm."
+            "The stick vanishes—then explodes back through! A flower-faced horror stalks closer, "
+            "mouths opening like wet petals. Nails ready?"
         ),
         "choices": {
-            "run_away": {
-                "desc": "Run back to the shore.",
-                "result_scene": "intro",
-            },
-            "stand_ground": {
-                "desc": "Stand and prepare for whatever emerges.",
-                "result_scene": "tower_combat",
-            },
+            "fight_demo": {"desc": "Fight the Demogorgon with improvised weapon.", "result_scene": "demo_fight"},
+            "run_lab": {"desc": "Sprint to lab fence.", "result_scene": "lab_fence"},
+            "hide_gate": {"desc": "Hide behind the gate.", "result_scene": "demo_passes"},
         },
     },
-    "latch_open": {
-        "title": "The Hatch Opens",
+    "creel_house": {
+        "title": "Creel House Attic",
         "desc": (
-            "With the map's guidance the latch yields and the hatch opens with a breath of cold air. "
-            "Inside, a spiral of rough steps leads down into an ancient cellar lit by phosphorescent moss."
+            "Clock chimes four times. Vecna's silhouette looms amid floating debris, tentacles writhing. "
+            "Your nose bleeds—his curse grips you."
         ),
         "choices": {
-            "descend": {
-                "desc": "Descend into the cellar.",
-                "result_scene": "cellar",
-            },
-            "close_hatch": {
-                "desc": "Close the hatch and reconsider.",
-                "result_scene": "tower_approach",
-            },
+            "el_powers": {"desc": "Channel powers like Eleven.", "result_scene": "el_vs_vecna", "effects": {"add_journal": "Telekinetic blast shakes Vecna!"}},
+            "fight_vecna": {"desc": "Charge Vecna with nail bat.", "result_scene": "steve_vs_vecna"},
+            "play_music": {"desc": "Blast 'Running Up That Hill' on walkman.", "result_scene": "vecna_break"},
         },
     },
-    "secret_entrance": {
-        "title": "A Narrow Gap",
+    "el_vs_vecna": {
+        "title": "Eleven vs Vecna",
         "desc": (
-            "Behind a pile of rubble you find a narrow gap and old rope leading downward. "
-            "It smells of cold iron and something briny."
+            "You hurl Vecna with psychokinetic rage—hands glow, tentacles snap! He counters, lifting you. "
+            "'Friends don't lie,' you scream, drawing strength from memories."
         ),
         "choices": {
-            "squeeze_in": {
-                "desc": "Squeeze through the gap and follow the rope down.",
-                "result_scene": "cellar",
-            },
-            "mark_and_return": {
-                "desc": "Mark the spot and return to the shore.",
-                "result_scene": "intro",
-            },
+            "max_memory": {"desc": "Tap Max's skate dance memory for power surge.", "result_scene": "vecna_retreat", "effects": {"add_inventory": "vecna_tentacle", "add_journal": "Vecna hurled through window—gates tear open."}},
+            "overpower": {"desc": "Push harder—risk burnout.", "result_scene": "vecna_wins"},
+            "flee": {"desc": "Break free and run.", "result_scene": "creel_house"},
         },
     },
-    "cellar": {
-        "title": "Cellar of Echoes",
+    "steve_vs_vecna": {
+        "title": "Steve's Stand",
         "desc": (
-            "The cellar opens into a circular chamber where runes glow faintly. At the center "
-            "is a stone plinth and upon it a small brass key and a sealed scroll."
+            "Nail bat cracks against Vecna's vines. 'You want eggs? Go get 'em!' Bat swings wild amid spores. "
+            "Team Nancy/Robin loads Molotovs behind you."
         ),
         "choices": {
-            "take_key": {
-                "desc": "Pick up the brass key.",
-                "result_scene": "cellar_key",
-                "effects": {"add_inventory": "brass_key", "add_journal": "Found brass key on plinth."},
-            },
-            "open_scroll": {
-                "desc": "Break the seal and read the scroll.",
-                "result_scene": "scroll_reveal",
-                "effects": {"add_journal": "Scroll reads: 'The tide remembers what the villagers forget.'"},
-            },
-            "leave_quietly": {
-                "desc": "Leave the cellar and close the hatch behind you.",
-                "result_scene": "intro",
-            },
+            "bat_combo": {"desc": "Nail bat flurry + Molotov shower.", "result_scene": "vecna_burns", "effects": {"add_journal": "Vecna's flesh sears—Hopper aids from Russia."}},
+            "demo_bats": {"desc": "Demobats swarm—fight through.", "result_scene": "demobats_swarm"},
+            "retreat": {"desc": "Fall back to Upside Down vines.", "result_scene": "upside_down"},
         },
     },
-    "cellar_key": {
-        "title": "Key in Hand",
+    "demobats_swarm": {
+        "title": "Steve vs Demobats",
         "desc": (
-            "With the key in your hand the runes dim and a hidden panel slides open, revealing a "
-            "small statue that begins to hum. A voice, ancient and kind, asks: 'Will you return what was taken?'"
+            "Winged horrors dive, razor teeth snapping. Steve's bat crushes skulls—'Not today, bats!' "
+            "Blood sprays as you shield the group."
         ),
         "choices": {
-            "pledge_help": {
-                "desc": "Pledge to return what was taken.",
-                "result_scene": "reward",
-                "effects": {"add_journal": "You pledged to return what was taken."},
-            },
-            "refuse": {
-                "desc": "Refuse and pocket the key.",
-                "result_scene": "cursed_key",
-                "effects": {"add_journal": "You pocketed the key; a weight grows in your pocket."},
-            },
+            "bat_smash": {"desc": "Smash through the swarm.", "result_scene": "vecna_burns", "effects": {"add_journal": "Demobats shredded; path to Vecna clear."}},
+            "fire_torch": {"desc": "Light torch from Upside Down vines.", "result_scene": "demobats_burn"},
+            "run": {"desc": "Sprint to safety.", "result_scene": "creel_house"},
         },
     },
-    "scroll_reveal": {
-        "title": "The Scroll",
+    "will_vs_demovecna": {
+        "title": "Will vs Demogorgon (S5 Ep1)",
         "desc": (
-            "The scroll tells of an heirloom taken by a water spirit that dwells beneath the tower. "
-            "It hints that the brass key 'speaks' when offered with truth."
+            "Will in Upside Down—S5 Demogorgon stalks. Vecna watches: 'Beautiful things await.' "
+            "Sing or fight?"
         ),
         "choices": {
-            "search_for_key": {
-                "desc": "Search the plinth for a key.",
-                "result_scene": "cellar_key",
-            },
-            "leave_quietly": {
-                "desc": "Leave the cellar and keep the knowledge to yourself.",
-                "result_scene": "intro",
-            },
+            "sing_resist": {"desc": "Sing 'Should I Stay'—powers flicker.", "result_scene": "reward"},
+            "fight_demo": {"desc": "Shoot Demogorgon—Vecna grabs you.", "result_scene": "hawkins_cracked"},
         },
     },
-    "tower_combat": {
-        "title": "Something Emerges",
+
+    # Season 5 Scenes (Hawkins cracked open, final war)
+    "hawkins_cracked": {
+        "title": "Hawkins Rifts Open (Season 5)",
         "desc": (
-            "A hunched, brine-soaked creature scrambles out from the tower. Its eyes glow with hunger. "
-            "You must act quickly."
+            "The town splits—massive red gates tear Hawkins apart. Vines overrun Main Street, skies burn red. "
+            "Vecna's final army marches: Demogorgons, Vecna spawn, Mind Flayer fragments."
         ),
         "choices": {
-            "fight": {
-                "desc": "Fight the creature.",
-                "result_scene": "fight_win",
-            },
-            "flee": {
-                "desc": "Flee back to the shore.",
-                "result_scene": "intro",
-            },
+            "final_stand": {"desc": "Join the final battle at center rift.", "result_scene": "final_battle"},
+            "find_will": {"desc": "Search for Will in the chaos.", "result_scene": "will_upside_down"},
+            "nuke_plan": {"desc": "Help rig the lab nuke.", "result_scene": "nuke_prep"},
         },
     },
-    "fight_win": {
-        "title": "After the Scuffle",
+    "final_battle": {
+        "title": "War for Hawkins",
         "desc": (
-            "You manage to fend off the creature; it flees wailing towards the sea. On the ground lies "
-            "a small locket engraved with a crest — likely the heirloom mentioned in the scroll."
+            "Eleven, Hopper, Joyce lead the charge. Steve bats Demogorgons, Dustin fires fireworks. "
+            "'Running Up That Hill' blares as Vecna rises from central crater."
         ),
         "choices": {
-            "take_locket": {
-                "desc": "Take the locket and examine it.",
-                "result_scene": "reward",
-                "effects": {"add_inventory": "engraved_locket", "add_journal": "Recovered an engraved locket."},
-            },
-            "leave_locket": {
-                "desc": "Leave the locket and tend to your wounds.",
-                "result_scene": "intro",
-            },
+            "support_el": {"desc": "Shield Eleven for final Vecna push.", "result_scene": "vecna_final"},
+            "demo_army": {"desc": "Fight Demogorgon horde with nail bat.", "result_scene": "demo_armageddon"},
+            "protect_kids": {"desc": "Guard the younger kids.", "result_scene": "kids_safe"},
         },
     },
+    "vecna_final": {
+        "title": "Eleven's Final Push",
+        "desc": (
+            "Eleven screams—blood vessels burst as she rips Vecna apart molecule by molecule. "
+            "'You... are... not... alone!' The Upside Down collapses inward."
+        ),
+        "choices": {
+            "victory": {"desc": "Witness the gates close forever.", "result_scene": "true_reward"},
+            "final_sacrifice": {"desc": "Make the ultimate sacrifice.", "result_scene": "hero_falls"},
+        },
+    },
+    # Missing connector scenes
     "reward": {
-        "title": "A Minor Resolution",
+        "title": "A Glimpse of Truth",
         "desc": (
-            "A small sense of peace settles over Brinmere. Villagers may one day know the heirloom is found, or it may remain a secret. "
-            "You feel the night shift; the little arc of your story here closes for now."
+            "You clutch a lab keycard and Will's drawing. The Upside Down's chill fades, but Hawkins feels forever changed. "
+            "Creel House calls—or head to cracked streets."
         ),
         "choices": {
-            "end_session": {
-                "desc": "End the session and return to the shore (conclude mini-arc).",
-                "result_scene": "intro",
-            },
-            "keep_exploring": {
-                "desc": "Keep exploring for more mysteries.",
-                "result_scene": "intro",
-            },
+            "creel_house": {"desc": "Investigate Creel House.", "result_scene": "creel_house"},
+            "hawkins_cracked": {"desc": "Witness Season 5 rifts opening.", "result_scene": "hawkins_cracked"},
+            "end_session": {"desc": "Head home (end arc).", "result_scene": "intro"},
         },
     },
-    "cursed_key": {
-        "title": "A Weight in the Pocket",
+    "true_reward": {
+        "title": "Hawkins Saved",
         "desc": (
-            "The brass key glows coldly. You feel a heavy sorrow that tugs at your thoughts. "
-            "Perhaps the key demands something in return..."
+            "Gates seal. Sky clears. Friends reunite at the arcade. Will smiles—'It's over.' "
+            "But in the distance... one red flicker remains."
         ),
         "choices": {
-            "seek_redemption": {
-                "desc": "Seek a way to make amends.",
-                "result_scene": "reward",
-            },
-            "bury_key": {
-                "desc": "Bury the key and hope the weight fades.",
-                "result_scene": "intro",
-            },
+            "celebrate": {"desc": "Join victory party at arcade.", "result_scene": "intro"},
+            "investigate_flicker": {"desc": "Check final red flicker.", "result_scene": "intro"},
         },
     },
 }
+
 
 # -------------------------
 # Per-session Userdata
